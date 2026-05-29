@@ -2,15 +2,18 @@
 
 **Zero-Trust Security and Governance Reference Architecture for Autonomous Multi-Agent AI Systems**
 
-Author: Sunil Gentyala | HCLTECH  
+Author: Sunil Gentyala | HCLTECH (HCL America Inc.) | sunil.gentyala@ieee.org  
 Framework Version: 1.0.0  
-CSA Agentic Trust Framework Aligned | OWASP Top 10 for Agentic Applications Mitigated  
+CSA Agentic Trust Framework Aligned | OWASP Top 10 Risks and Mitigations for Agentic AI Security (Dec 2025) | NIST AI RMF 1.0
+
+> **Paper submitted to the Cloud Security Alliance (CSA) Research Program.**  
+> Accompanying whitepaper: *"Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"* — Sunil Gentyala, May 2026.
 
 ---
 
 ## Overview
 
-AegisSwarm-Core is the open-source reference implementation accompanying the whitepaper *"Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"* (May 2026).
+AegisSwarm-Core is the open-source reference implementation accompanying the CSA whitepaper *"Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"* (May 2026).
 
 Enterprise AI has moved beyond isolated LLM prompts into autonomous Multi-Agent Systems (MAS) where specialized digital workers decompose, delegate, and execute tasks without per-step human oversight. While this unlocks dramatic operational velocity, it introduces execution-plane attack surfaces that legacy perimeter defenses cannot address.
 
