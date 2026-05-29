@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "schema": "aegisswarm/agent-manifest/v1",
+  "agents": [
+    {
+      "id": "orchestrator-alpha",
+      "display_name": "Primary Orchestration Agent",
+      "autonomy_tier": 3,
+      "allowed_tools": ["read_file", "list_directory", "call_agent"],
+      "denied_tools": ["write_file", "delete_resource", "execute_shell"],
+      "max_token_budget": 50000,
+      "escalation_threshold": 0.75,
+      "spiffe_trust_domain": "aegisswarm.enterprise.local",
+      "session_ttl_seconds": 3600,
+      "require_human_approval_for": ["data_deletion", "external_transfer", "privilege_change"]
+    },
+    {
+      "id": "coder-agent-beta",
+      "display_name": "Code Generation Specialist",
+      "autonomy_tier": 2,
+      "allowed_tools": ["read_file", "write_file", "run_tests"],
+      "denied_tools": ["delete_resource", "execute_shell", "external_api_call"],
+      "max_token_budget": 30000,
+      "escalation_threshold": 0.60,
+      "spiffe_trust_domain": "aegisswarm.enterprise.local",
+      "session_ttl_seconds": 1800,
+      "require_human_approval_for": ["production_deploy", "schema_migration"]
+    },
+    {
+      "id": "compliance-agent-gamma",
+      "display_name": "Compliance and Audit Specialist",
+      "autonomy_tier": 2,
+      "allowed_tools": ["read_file", "generate_report", "query_audit_log"],
+      "denied_tools": ["write_file", "delete_resource", "execute_shell"],
+      "max_token_budget": 25000,
+      "escalation_threshold": 0.50,
+      "spiffe_trust_domain": "aegisswarm.enterprise.local",
+      "session_ttl_seconds": 1800,
+      "require_human_approval_for": ["regulatory_filing", "audit_export"]
+    },
+    {
+      "id": "data-writer-delta",
+      "display_name": "Database Writer Agent",
+      "autonomy_tier": 1,
+      "allowed_tools": ["read_db", "write_db"],
+      "denied_tools": ["delete_db", "drop_table", "execute_shell", "external_api_call"],
+      "max_token_budget": 10000,
+      "escalation_threshold": 0.40,
+      "spiffe_trust_domain": "aegisswarm.enterprise.local",
+      "session_ttl_seconds": 900,
+      "require_human_approval_for": ["bulk_write", "schema_change", "pii_access"]
+    }
+  ]
+}

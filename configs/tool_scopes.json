@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "schema": "aegisswarm/tool-scopes/v1",
+  "tools": [
+    {
+      "tool_id": "read_file",
+      "description": "Read file contents from the local filesystem",
+      "risk_level": "low",
+      "c_impact": 0.2,
+      "allowed_tiers": [1, 2, 3, 4],
+      "requires_approval_above_tier": null,
+      "rate_limit_per_minute": 100,
+      "audit_log": true
+    },
+    {
+      "tool_id": "write_file",
+      "description": "Write or overwrite file contents on the local filesystem",
+      "risk_level": "medium",
+      "c_impact": 0.5,
+      "allowed_tiers": [2, 3, 4],
+      "requires_approval_above_tier": 4,
+      "rate_limit_per_minute": 20,
+      "audit_log": true
+    },
+    {
+      "tool_id": "delete_resource",
+      "description": "Permanently delete a file, record, or cloud resource",
+      "risk_level": "critical",
+      "c_impact": 1.0,
+      "allowed_tiers": [4],
+      "requires_approval_above_tier": 0,
+      "rate_limit_per_minute": 5,
+      "audit_log": true
+    },
+    {
+      "tool_id": "execute_shell",
+      "description": "Execute arbitrary shell commands on the host system",
+      "risk_level": "critical",
+      "c_impact": 1.0,
+      "allowed_tiers": [],
+      "requires_approval_above_tier": 0,
+      "rate_limit_per_minute": 0,
+      "audit_log": true,
+      "blocked": true
+    },
+    {
+      "tool_id": "external_api_call",
+      "description": "Make outbound HTTP requests to external APIs",
+      "risk_level": "high",
+      "c_impact": 0.8,
+      "allowed_tiers": [3, 4],
+      "requires_approval_above_tier": 4,
+      "rate_limit_per_minute": 30,
+      "audit_log": true
+    },
+    {
+      "tool_id": "external_transfer",
+      "description": "Transfer data or funds to an external account or destination",
+      "risk_level": "critical",
+      "c_impact": 1.0,
+      "allowed_tiers": [],
+      "requires_approval_above_tier": 0,
+      "rate_limit_per_minute": 0,
+      "audit_log": true,
+      "blocked": true
+    },
+    {
+      "tool_id": "query_audit_log",
+      "description": "Read the immutable audit trail",
+      "risk_level": "low",
+      "c_impact": 0.1,
+      "allowed_tiers": [1, 2, 3, 4],
+      "requires_approval_above_tier": null,
+      "rate_limit_per_minute": 50,
+      "audit_log": false
+    },
+    {
+      "tool_id": "call_agent",
+      "description": "Delegate a sub-task to a peer agent",
+      "risk_level": "medium",
+      "c_impact": 0.6,
+      "allowed_tiers": [3, 4],
+      "requires_approval_above_tier": null,
+      "rate_limit_per_minute": 40,
+      "audit_log": true
+    }
+  ]
+}

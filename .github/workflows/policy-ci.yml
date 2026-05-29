@@ -1,0 +1,71 @@
+name: AegisSwarm Policy CI
+
+on:
+  push:
+    branches: ["main", "develop"]
+    paths:
+      - "policies/**"
+      - "configs/**"
+      - "tests/**"
+      - ".github/workflows/policy-ci.yml"
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  opa-lint:
+    name: OPA Policy Lint & Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OPA
+        run: |
+          curl -sL -o /usr/local/bin/opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
+          chmod +x /usr/local/bin/opa
+
+      - name: Lint Rego policies
+        run: opa fmt --diff policies/
+
+      - name: Check Rego policies
+        run: opa check policies/
+
+      - name: Run OPA unit tests
+        run: opa test policies/ -v
+
+  go-test:
+    name: Go Integration & Vulnerability Simulation Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run integration tests
+        run: go test ./tests/... -v -count=1 -timeout 60s
+
+      - name: Run vulnerability simulation tests
+        run: go test ./tests/vulnerability_simulation/... -v -count=1 -timeout 60s
+
+  security-scan:
+    name: Static Security Analysis (govulncheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Run govulncheck
+        run: govulncheck ./...
