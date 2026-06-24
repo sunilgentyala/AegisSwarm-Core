@@ -15,6 +15,8 @@ CSA Agentic Trust Framework Aligned | OWASP Top 10 Risks and Mitigations for Age
 
 AegisSwarm-Core is the open-source reference implementation accompanying the CSA whitepaper *"Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"* (May 2026).
 
+https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments
+
 Enterprise AI has moved beyond isolated LLM prompts into autonomous Multi-Agent Systems (MAS) where specialized digital workers decompose, delegate, and execute tasks without per-step human oversight. While this unlocks dramatic operational velocity, it introduces execution-plane attack surfaces that legacy perimeter defenses cannot address.
 
 AegisSwarm wraps a strict, deterministic boundary layer around autonomous agent networks. Rather than modifying model weights or relying on alignment alone, it intercepts, evaluates, and audits every agentic action in real time using four independent subsystems.
