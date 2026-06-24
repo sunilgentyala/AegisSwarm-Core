@@ -6,20 +6,33 @@ Author: Sunil Gentyala | HCLTECH (HCL America Inc.) | sunil.gentyala@ieee.org
 Framework Version: 1.0.0  
 CSA Agentic Trust Framework Aligned | OWASP Top 10 Risks and Mitigations for Agentic AI Security (Dec 2025) | NIST AI RMF 1.0
 
-> **Paper submitted to the Cloud Security Alliance (CSA) Research Program.**  
-> Accompanying whitepaper: *"Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"* — Sunil Gentyala, May 2026.
+> **Published by the Cloud Security Alliance (CSA), June 24, 2026.**  
+> Read the article: ["Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"](https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments) by Sunil Gentyala.
+>
+> **Project site:** [sunilgentyala.github.io/AegisSwarm-Core](https://sunilgentyala.github.io/AegisSwarm-Core/)
 
 ---
 
 ## Overview
 
-AegisSwarm-Core is the open-source reference implementation accompanying the CSA whitepaper *"Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"* (May 2026).
+AegisSwarm-Core is the open-source reference implementation accompanying the CSA article *"Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments"*.
 
-https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments
-
-Enterprise AI has moved beyond isolated LLM prompts into autonomous Multi-Agent Systems (MAS) where specialized digital workers decompose, delegate, and execute tasks without per-step human oversight. While this unlocks dramatic operational velocity, it introduces execution-plane attack surfaces that legacy perimeter defenses cannot address.
+Enterprise AI has moved beyond isolated LLM prompts into autonomous Multi-Agent Systems (MAS), where specialized digital workers decompose, delegate, and execute tasks without per-step human oversight. While this unlocks dramatic operational velocity, it introduces execution-plane attack surfaces that legacy perimeter defenses cannot address.
 
 AegisSwarm wraps a strict, deterministic boundary layer around autonomous agent networks. Rather than modifying model weights or relying on alignment alone, it intercepts, evaluates, and audits every agentic action in real time using four independent subsystems.
+
+---
+
+## Why AegisSwarm-Core
+
+- **Closes the gap legacy security tools miss.** Firewalls, WAFs, and IAM were built for static clients, not autonomous agents that plan, delegate, and call tools on their own; AegisSwarm governs the agent execution plane directly.
+- **Maps to a named threat model, not a generic checklist.** Every control traces to a specific entry in the OWASP Top 10 for Agentic Applications (ASI01-ASI05), so coverage gaps are visible rather than assumed.
+- **Identity-first, not key-based.** SPIFFE/SPIRE short-lived SVIDs and mutual TLS replace static API keys between agents, removing the most common path to "Confused Deputy" privilege escalation.
+- **Policy-as-code, not hardcoded rules.** OPA/Rego policies for autonomy tiers and tool access can be reviewed, versioned, and tested in CI like any other code, instead of being buried in application logic.
+- **Quantifies risk instead of guessing.** The `Rs = C_impact x (1 - P_conf)` scoring model gives a deterministic, auditable trigger for human-in-the-loop escalation rather than relying on the agent's own confidence claims.
+- **Built for audit from day one.** Every stage emits HMAC-signed, OpenTelemetry-traced records, so incident response and compliance reviews have a verifiable trail instead of best-effort logging.
+- **Standards-aligned, not a one-off framework.** Maps directly to the CSA Agentic Trust Framework, CSA Cloud Controls Matrix v4.1, and NIST AI RMF, so adopting it supports existing compliance programs rather than creating a new one.
+- **Open and inspectable.** Apache 2.0 licensed reference implementation in Go, with vulnerability simulation tests included, so teams can verify the guardrails actually hold before trusting them in production.
 
 ---
 
@@ -199,12 +212,12 @@ AegisSwarm assigns every agent a tier that controls which tools it can access. T
 
 This implementation is aligned with:
 
-- **CSA Agentic Trust Framework (ATF)** — Woodruff et al., February 2026  
+- **CSA Agentic Trust Framework (ATF)**: Woodruff et al., February 2026  
   Five governance pillars: Identity, Behavior, Data Governance, Segmentation, Incident Response
-- **CSA Cloud Controls Matrix v4.1** — Identity and Access Management domain
-- **OWASP Top 10 for Agentic Applications** — Released December 10, 2025
-- **NIST AI Risk Management Framework** — Agentic AI profile, Govern and Manage functions
-- **SPIFFE/SPIRE** (CNCF) — Workload identity standard
+- **CSA Cloud Controls Matrix v4.1**: Identity and Access Management domain
+- **OWASP Top 10 for Agentic Applications**: Released December 10, 2025
+- **NIST AI Risk Management Framework**: Agentic AI profile, Govern and Manage functions
+- **SPIFFE/SPIRE** (CNCF): Workload identity standard
 
 ---
 
@@ -220,7 +233,7 @@ This is a research reference implementation. Issues and pull requests are welcom
 
 ## License
 
-Apache 2.0 — See LICENSE file.
+Apache 2.0. See LICENSE file.
 
 ---
 
@@ -228,4 +241,6 @@ Apache 2.0 — See LICENSE file.
 
 If you use AegisSwarm-Core in your research or implementation work, please cite:
 
-> Gentyala, S. (2026). *Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments*. Cloud Security Alliance. https://github.com/sunilgentyala/AegisSwarm-Core
+> Gentyala, S. (2026). *Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments*. Cloud Security Alliance. https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments
+>
+> Reference implementation: https://github.com/sunilgentyala/AegisSwarm-Core

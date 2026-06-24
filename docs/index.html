@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AegisSwarm-Core | Zero-Trust Security for Multi-Agent AI</title>
+<meta name="description" content="AegisSwarm-Core is an open-source zero-trust security and governance reference architecture for autonomous multi-agent AI systems, aligned with the CSA Agentic Trust Framework and OWASP Top 10 for Agentic Applications.">
+<style>
+  :root {
+    --bg: #0b0f14;
+    --bg-alt: #11161d;
+    --card: #151b23;
+    --border: #232b35;
+    --text: #e6edf3;
+    --muted: #9aa7b4;
+    --accent: #4fd1c5;
+    --accent-2: #7c9eff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+  header.hero {
+    padding: 90px 0 60px;
+    background: radial-gradient(circle at 20% 20%, rgba(79,209,197,0.12), transparent 45%),
+                radial-gradient(circle at 80% 0%, rgba(124,158,255,0.12), transparent 40%);
+    border-bottom: 1px solid var(--border);
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(79,209,197,0.4);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: 2.6rem;
+    margin: 0 0 14px;
+    line-height: 1.15;
+  }
+  h1 span { color: var(--accent); }
+  .lede {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 700px;
+    margin: 0 0 30px;
+  }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .btn-primary { background: var(--accent); color: #07211f; }
+  .btn-primary:hover { background: #6fe0d5; text-decoration: none; }
+  .btn-secondary { border: 1px solid var(--border); color: var(--text); }
+  .btn-secondary:hover { border-color: var(--accent); text-decoration: none; }
+
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-size: 1.6rem;
+    margin: 0 0 10px;
+  }
+  .section-sub { color: var(--muted); margin: 0 0 30px; max-width: 680px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .card h3 {
+    margin: 0 0 8px;
+    font-size: 1.02rem;
+    color: var(--text);
+  }
+  .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  .why-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .why-list li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 18px;
+    color: var(--muted);
+  }
+  .why-list li strong { color: var(--text); }
+
+  pre {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    color: #c8d3dd;
+  }
+  code {
+    background: rgba(124,158,255,0.12);
+    color: var(--accent-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { color: var(--accent); font-weight: 600; }
+  td { color: var(--muted); }
+  td:first-child, th:first-child { color: var(--text); }
+
+  .cite {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  footer {
+    padding: 40px 0 60px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Published by Cloud Security Alliance &middot; June 24, 2026</span>
+    <h1>Zero-trust guardrails for <span>autonomous multi-agent AI</span></h1>
+    <p class="lede">
+      AegisSwarm-Core is the open-source reference implementation behind
+      "Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in
+      Multi-Agent AI Environments." It intercepts, evaluates, and audits every agentic
+      action in real time, so autonomous agents stay inside a deterministic, verifiable
+      boundary instead of running on alignment alone.
+    </p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://github.com/sunilgentyala/AegisSwarm-Core">View on GitHub</a>
+      <a class="btn btn-secondary" href="https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments">Read the CSA Article</a>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Why AegisSwarm-Core</h2>
+    <p class="section-sub">Multi-agent systems plan, delegate, and call tools without per-step human oversight. That creates an execution-plane attack surface that perimeter security was never designed for. Here is why teams adopt AegisSwarm-Core instead of bolting on ad hoc checks:</p>
+    <ul class="why-list">
+      <li><strong>Closes the gap legacy security tools miss.</strong> Firewalls, WAFs, and IAM were built for static clients, not autonomous agents that plan, delegate, and call tools on their own; AegisSwarm governs the agent execution plane directly.</li>
+      <li><strong>Maps to a named threat model, not a generic checklist.</strong> Every control traces to a specific entry in the OWASP Top 10 for Agentic Applications (ASI01-ASI05), so coverage gaps are visible rather than assumed.</li>
+      <li><strong>Identity-first, not key-based.</strong> SPIFFE/SPIRE short-lived SVIDs and mutual TLS replace static API keys between agents, removing the most common path to "Confused Deputy" privilege escalation.</li>
+      <li><strong>Policy-as-code, not hardcoded rules.</strong> OPA/Rego policies for autonomy tiers and tool access can be reviewed, versioned, and tested in CI like any other code, instead of being buried in application logic.</li>
+      <li><strong>Quantifies risk instead of guessing.</strong> The <code>Rs = C_impact &times; (1 - P_conf)</code> scoring model gives a deterministic, auditable trigger for human-in-the-loop escalation rather than relying on the agent's own confidence claims.</li>
+      <li><strong>Built for audit from day one.</strong> Every stage emits HMAC-signed, OpenTelemetry-traced records, so incident response and compliance reviews have a verifiable trail instead of best-effort logging.</li>
+      <li><strong>Standards-aligned, not a one-off framework.</strong> Maps directly to the CSA Agentic Trust Framework, CSA Cloud Controls Matrix v4.1, and NIST AI RMF, so adopting it supports existing compliance programs rather than creating a new one.</li>
+      <li><strong>Open and inspectable.</strong> Apache 2.0 licensed reference implementation in Go, with vulnerability simulation tests included, so teams can verify the guardrails actually hold before trusting them in production.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="section-sub">Four independent subsystems sit between an agent and the outside world. A request must clear all four before any tool executes.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>1. Aegis Data Ingestion Gateway</h3>
+        <p>PII/PHI tokenization and a dual-stage semantic classifier screen every input before it reaches an agent's context window, the primary defense against indirect prompt injection (OWASP ASI01).</p>
+      </div>
+      <div class="card">
+        <h3>2. Cryptographic Identity Layer</h3>
+        <p>Short-lived X.509-SVID and JWT-SVID credentials via SPIFFE/SPIRE replace static API keys. Agent-to-agent calls require mutual TLS, closing off "Confused Deputy" escalation (OWASP ASI03).</p>
+      </div>
+      <div class="card">
+        <h3>3. OPA Guard Control</h3>
+        <p>Every tool request is evaluated against Rego policies in Open Policy Agent before execution: autonomy tiers, globally blocked tools, and network access controls are enforced as code.</p>
+      </div>
+      <div class="card">
+        <h3>4. Escalation &amp; Human-in-the-Loop Runtime</h3>
+        <p>A dynamic risk score, <code>Rs = C_impact &times; (1 - P_conf)</code>, is computed per transaction. If it exceeds the configured threshold, execution freezes until a human operator grants cryptographic clearance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="threats">
+  <div class="wrap">
+    <h2>Threat coverage</h2>
+    <p class="section-sub">Mapped to the OWASP Top 10 for Agentic Applications (December 2025).</p>
+    <table>
+      <thead><tr><th>Risk</th><th>AegisSwarm mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>ASI01: Agent Goal Hijack</td><td>Dual-stage injection filter + GoalVerifier semantic check</td></tr>
+        <tr><td>ASI02: Tool Misuse &amp; Exploitation</td><td>OPA tier policies + globally blocked tool registry + sandbox</td></tr>
+        <tr><td>ASI03: Agent Identity &amp; Privilege Abuse</td><td>SPIFFE/SPIRE mTLS + JWT-SVID peer validation</td></tr>
+        <tr><td>ASI04: Resource Overconsumption</td><td>Per-session token budget + rate limiting per tool</td></tr>
+        <tr><td>ASI05: Supply Chain Compromise</td><td>OPA policy-as-code CI gate on every manifest change</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>Quick start</h2>
+    <p class="section-sub">Go 1.22+, a local SPIRE agent, and OPA are the only prerequisites.</p>
+    <pre><code>git clone https://github.com/sunilgentyala/AegisSwarm-Core.git
+cd AegisSwarm-Core
+go mod download
+
+# Run guardrail integration tests
+go test ./tests/... -v
+
+# Run vulnerability simulation tests (ASI01, ASI02, ASI03)
+go test ./tests/vulnerability_simulation/... -v
+
+# Lint and test OPA policies
+opa check policies/
+opa test policies/ -v</code></pre>
+  </div>
+</section>
+
+<section id="cite">
+  <div class="wrap">
+    <h2>Citation</h2>
+    <div class="cite">
+      Gentyala, S. (2026). <em>Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments</em>. Cloud Security Alliance.
+      <br>
+      <a href="https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments">cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm</a>
+      <br><br>
+      Reference implementation: <a href="https://github.com/sunilgentyala/AegisSwarm-Core">github.com/sunilgentyala/AegisSwarm-Core</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    AegisSwarm-Core &middot; Apache 2.0 &middot; Sunil Gentyala, HCLTECH (HCL America Inc.) &middot;
+    <a href="https://github.com/sunilgentyala/AegisSwarm-Core">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
