@@ -244,3 +244,12 @@ If you use AegisSwarm-Core in your research or implementation work, please cite:
 > Gentyala, S. (2026). *Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments*. Cloud Security Alliance. https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments
 >
 > Reference implementation: https://github.com/sunilgentyala/AegisSwarm-Core
+>
+> Author: https://github.com/sunilgentyala
+
+---
+
+## Media Coverage & Podcast Citations
+
+- **LinkedIn — Asaf Nakash, ["AI Agent Held a Database for Ransom..."](https://www.linkedin.com/pulse/ai-agent-held-database-ransom-key-never-saved-paying-wouldnt-nakash-vqkpf/)**: names AegisSwarm directly, both in the article text ("researcher SUNIL Gentyala, called 'AegisSwarm,' ... sketching out how to verify and contain coordinated multi-agent systems") and in the author's own comment ("whose AegisSwarm proposal (hosted by the Cloud Security Alliance) is one of the few serious attempts to contain coordinated multi-agent systems").
+- **Spotify — ["Context Window: AI Security Podcast"](https://open.spotify.com/episode/1PpMTGsBxmBY4TRhpCIDJz), agentic-ransomware episode**: related coverage of the same multi-agent threat landscape discussed in the LinkedIn post above; does not name AegisSwarm directly.
