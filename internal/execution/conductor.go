@@ -37,25 +37,27 @@ type ToolResponse struct {
 
 // AgentConfig mirrors the relevant fields from agents_manifest.json.
 type AgentConfig struct {
-	ID                    string   `json:"id"`
-	AutononyTier          int      `json:"autonomy_tier"`
-	AllowedTools          []string `json:"allowed_tools"`
-	DeniedTools           []string `json:"denied_tools"`
-	MaxTokenBudget        int      `json:"max_token_budget"`
-	EscalationThreshold   float64  `json:"escalation_threshold"`
-	SessionTTLSeconds     int      `json:"session_ttl_seconds"`
+	ID                      string   `json:"id"`
+	AutononyTier            int      `json:"autonomy_tier"`
+	AllowedTools            []string `json:"allowed_tools"`
+	DeniedTools             []string `json:"denied_tools"`
+	MaxTokenBudget          int      `json:"max_token_budget"`
+	EscalationThreshold     float64  `json:"escalation_threshold"`
+	SessionTTLSeconds       int      `json:"session_ttl_seconds"`
 	RequireHumanApprovalFor []string `json:"require_human_approval_for"`
 }
 
 // Conductor routes agent tool requests through identity verification,
 // guardrail evaluation, and escalation logic before allowing execution.
 type Conductor struct {
-	mu         sync.RWMutex
-	agents     map[string]*AgentConfig
-	sessions   map[string]*identity.SessionState
-	idManager  *identity.SPIFFEManager
-	guardrails *guardrails.GuardrailEngine
-	logger     *zap.Logger
+	mu              sync.RWMutex
+	agents          map[string]*AgentConfig
+	sessions        map[string]*identity.SessionState
+	idManager       *identity.SPIFFEManager
+	guardrails      *guardrails.GuardrailEngine
+	logger          *zap.Logger
+	approvals       *ApprovalGate
+	approvalTimeout time.Duration
 }
 
 // NewConductor reads the agent manifest and wires up the runtime.
@@ -80,12 +82,33 @@ func NewConductor(manifestPath string, idMgr *identity.SPIFFEManager, gr *guardr
 	logger, _ := zap.NewProduction()
 
 	return &Conductor{
-		agents:     agents,
-		sessions:   make(map[string]*identity.SessionState),
-		idManager:  idMgr,
-		guardrails: gr,
-		logger:     logger,
+		agents:          agents,
+		sessions:        make(map[string]*identity.SessionState),
+		idManager:       idMgr,
+		guardrails:      gr,
+		logger:          logger,
+		approvalTimeout: 5 * time.Minute,
 	}, nil
+}
+
+// SetApprovalGate wires the cryptographic human-approval mechanism used by
+// requestHumanApproval. Until this is called, escalated requests fail
+// closed: ExecuteTool will refuse to proceed rather than silently
+// auto-approving, because there is no configured way to obtain a genuine
+// operator clearance.
+func (c *Conductor) SetApprovalGate(gate *ApprovalGate) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.approvals = gate
+}
+
+// SetApprovalTimeout overrides the default 5-minute window a caller will
+// wait for a signed operator token before the escalation is treated as
+// denied. It is bounded by the caller's own context deadline regardless.
+func (c *Conductor) SetApprovalTimeout(d time.Duration) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.approvalTimeout = d
 }
 
 // AgentTier returns the configured autonomy tier for a given agent ID.
@@ -120,10 +143,10 @@ func (c *Conductor) ExecuteTool(ctx context.Context, req ToolRequest) (*ToolResp
 
 	// Evaluate OPA guardrails
 	decision, err := c.guardrails.Evaluate(ctx, guardrails.EvalInput{
-		AgentID:  req.AgentID,
-		ToolID:   req.ToolID,
-		Tier:     cfg.AutononyTier,
-		Payload:  req.Parameters,
+		AgentID: req.AgentID,
+		ToolID:  req.ToolID,
+		Tier:    cfg.AutononyTier,
+		Payload: req.Parameters,
 	})
 	if err != nil || !decision.Allow {
 		reason := "OPA guardrail denial"
@@ -194,21 +217,69 @@ func (c *Conductor) toolPermitted(cfg *AgentConfig, toolID string) bool {
 }
 
 // requestHumanApproval freezes the execution thread and waits for an
-// authenticated operator to provide cryptographic clearance.
-// In production this integrates with an enterprise approval workflow.
+// authenticated operator to provide cryptographic clearance, verified via
+// ApprovalGate (see approval.go). Execution does not proceed past this
+// call unless a validly signed ApprovalToken matching this exact request
+// is submitted before the approval window closes.
+//
+// The transport that notifies an on-call human and carries their decision
+// back into the process — an enterprise ITSM webhook (PagerDuty /
+// ServiceNow), a Slack action, an internal approvals UI — is a documented
+// integration point, not implemented by this reference framework: whatever
+// transport is used, it must ultimately call ApprovalGate.Submit with a
+// token signed by the operator's private key. What IS implemented and
+// enforced here is the blocking wait and the cryptographic verification of
+// that token; there is no path through this function that returns nil
+// without a genuine, signature-verified clearance.
 func (c *Conductor) requestHumanApproval(ctx context.Context, req ToolRequest, rs float64) error {
+	c.mu.RLock()
+	gate := c.approvals
+	timeout := c.approvalTimeout
+	c.mu.RUnlock()
+
+	if gate == nil {
+		c.logger.Error("escalation requires human approval but no ApprovalGate is configured; failing closed",
+			zap.String("agent", req.AgentID),
+			zap.String("tool", req.ToolID))
+		return fmt.Errorf("escalated action requires human approval but no ApprovalGate is configured (fail-closed, not auto-approved)")
+	}
+	if timeout <= 0 {
+		timeout = 5 * time.Minute
+	}
+
+	requestID := fmt.Sprintf("%s|%s|%d", req.AgentID, req.ToolID, time.Now().UnixNano())
+
 	c.logger.Info("waiting for human approval",
 		zap.String("agent", req.AgentID),
 		zap.String("tool", req.ToolID),
+		zap.String("request_id", requestID),
 		zap.Float64("risk_score", rs))
 
-	// Respect the caller's context deadline; default 5-minute approval window.
-	approvalCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
+	// Respect the caller's context deadline; default approval window on top of it.
+	approvalCtx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	_ = approvalCtx
-	// TODO: integrate with enterprise ITSM webhook (PagerDuty / ServiceNow)
-	// to deliver a signed one-time approval token to the on-call operator.
+	tok, err := gate.Await(approvalCtx, PendingApproval{
+		RequestID: requestID,
+		AgentID:   req.AgentID,
+		ToolID:    req.ToolID,
+		RiskScore: rs,
+		CreatedAt: time.Now().UTC(),
+	})
+	if err != nil {
+		c.logger.Warn("human approval not obtained",
+			zap.String("agent", req.AgentID),
+			zap.String("tool", req.ToolID),
+			zap.String("request_id", requestID),
+			zap.Error(err))
+		return fmt.Errorf("human approval not obtained: %w", err)
+	}
+
+	c.logger.Info("human approval granted, cryptographic clearance verified",
+		zap.String("agent", req.AgentID),
+		zap.String("tool", req.ToolID),
+		zap.String("request_id", requestID))
+	_ = tok
 	return nil
 }
 

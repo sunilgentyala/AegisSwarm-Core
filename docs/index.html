@@ -209,14 +209,17 @@
       <div class="card">
         <h3>2. Cryptographic Identity Layer</h3>
         <p>Short-lived X.509-SVID and JWT-SVID credentials via SPIFFE/SPIRE replace static API keys. Agent-to-agent calls require mutual TLS, closing off "Confused Deputy" escalation (OWASP ASI03).</p>
+        <p><em>Implemented today:</em> real X.509 chain verification against a configured CA trust bundle, plus SPIFFE URI SAN checking read out of the verified certificate — a self-signed or wrong-CA certificate with correct-looking URI text is rejected. <em>Documented integration point:</em> live SPIRE Workload API connectivity for rotating SVIDs; this reference implementation loads a static PEM trust bundle instead.</p>
       </div>
       <div class="card">
         <h3>3. OPA Guard Control</h3>
         <p>Every tool request is evaluated against Rego policies in Open Policy Agent before execution: autonomy tiers, globally blocked tools, and network access controls are enforced as code.</p>
+        <p><em>Implemented today:</em> the sandboxed dispatcher whitelists five tools and each handler does real, verifiable work — real file reads/writes confined to a sandbox root with path-traversal rejection, and a real time-bounded <code>go test</code> subprocess for <code>run_tests</code> that is actually killed on timeout, not just abandoned.</p>
       </div>
       <div class="card">
         <h3>4. Escalation &amp; Human-in-the-Loop Runtime</h3>
         <p>A dynamic risk score, <code>Rs = C_impact &times; (1 - P_conf)</code>, is computed per transaction. If it exceeds the configured threshold, execution freezes until a human operator grants cryptographic clearance.</p>
+        <p><em>Implemented today:</em> a real blocking wait plus real ed25519 signature verification of the operator's approval token — no valid signed token, no unblock, and a misconfigured deployment fails closed rather than auto-approving. <em>Documented integration point:</em> the ITSM transport (PagerDuty/ServiceNow webhook, Slack action) that notifies the operator and carries their decision back.</p>
       </div>
     </div>
   </div>
@@ -242,7 +245,7 @@
 <section id="start">
   <div class="wrap">
     <h2>Quick start</h2>
-    <p class="section-sub">Go 1.22+, a local SPIRE agent, and OPA are the only prerequisites.</p>
+    <p class="section-sub">Go 1.22+ and OPA are the only hard prerequisites; a CA-signed trust bundle and an operator ed25519 keypair are needed to run the identity and escalation layers against real credentials (a live SPIRE deployment is the production source for the former).</p>
     <pre><code>git clone https://github.com/sunilgentyala/AegisSwarm-Core.git
 cd AegisSwarm-Core
 go mod download
@@ -252,6 +255,11 @@ go test ./tests/... -v
 
 # Run vulnerability simulation tests (ASI01, ASI02, ASI03)
 go test ./tests/vulnerability_simulation/... -v
+
+# Run the sandbox, escalation, and identity adversarial tests: forged
+# approval tokens, path-traversal reads, and self-signed/wrong-CA
+# certificates are all exercised and must be rejected.
+go test ./internal/execution/... ./internal/identity/... -v
 
 # Lint and test OPA policies
 opa check policies/
