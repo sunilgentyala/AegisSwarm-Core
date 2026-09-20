@@ -9,6 +9,8 @@
 [![OWASP Agentic Top 10](https://img.shields.io/badge/OWASP-Agentic%20Top%2010%20Aligned-orange.svg)](#threat-coverage)
 [![NIST AI RMF](https://img.shields.io/badge/NIST-AI%20RMF%201.0-8b5cf6.svg)](#csa-alignment)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Stars](https://img.shields.io/github/stars/sunilgentyala/AegisSwarm-Core?style=social)](https://github.com/sunilgentyala/AegisSwarm-Core/stargazers)
+[![Forks](https://img.shields.io/github/forks/sunilgentyala/AegisSwarm-Core?style=social)](https://github.com/sunilgentyala/AegisSwarm-Core/network/members)
 
 Author: Sunil Gentyala | HCLTECH (HCL America Inc.) | sunil.gentyala@ieee.org  
 Framework Version: 1.0.0  
