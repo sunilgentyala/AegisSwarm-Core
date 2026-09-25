@@ -271,15 +271,30 @@ Apache 2.0. See LICENSE file.
 
 ---
 
-## Citation
+## How to Cite
 
-If you use AegisSwarm-Core in your research or implementation work, please cite:
+If you use AegisSwarm-Core in your research, please cite the CSA publication and the reference implementation:
 
-> Gentyala, S. (2026). *Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments*. Cloud Security Alliance. https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments
->
-> Reference implementation: https://github.com/sunilgentyala/AegisSwarm-Core
->
-> Author: https://github.com/sunilgentyala
+```bibtex
+@misc{gentyala2026securingswarm,
+  author       = {Gentyala, Sunil},
+  title        = {Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust
+                  Architectures in Multi-Agent {AI} Environments},
+  howpublished = {Cloud Security Alliance blog},
+  month        = jun,
+  year         = {2026},
+  url          = {https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments}
+}
+
+@software{gentyala2026aegisswarm,
+  author    = {Gentyala, Sunil},
+  title     = {AegisSwarm-Core},
+  year      = {2026},
+  url       = {https://github.com/sunilgentyala/AegisSwarm-Core}
+}
+```
+
+Machine-readable metadata is in [`CITATION.cff`](CITATION.cff); GitHub shows it under "Cite this repository".
 
 ---
 

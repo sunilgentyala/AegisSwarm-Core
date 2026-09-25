@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: If you use this software in your research, please cite it as below.
+type: software
+title: AegisSwarm-Core
+authors:
+- family-names: Gentyala
+  given-names: Sunil
+  affiliation: HCLTech (HCL America Inc.), Dallas, TX, USA
+  orcid: https://orcid.org/0009-0005-2642-3479
+  email: sunil.gentyala@ieee.org
+repository-code: https://github.com/sunilgentyala/AegisSwarm-Core
+license: Apache-2.0
+abstract: Zero-trust security and governance framework for autonomous multi-agent AI networks.
+  Implements the CSA Agentic Trust Framework to mitigate OWASP Top 10 Agentic Risks using
+  SPIFFE/SPIRE identities, OPA/Rego policy-as-code, and semantic guardrail gateways.
+keywords:
+- agentic-ai
+- ai-security
+- cloud-security-alliance
+- golang
+- governance-as-code
+- llm-security
+- mcp-security
+- multi-agent-systems
+- open-policy-agent
+- owasp-top-10
+references:
+- type: blog
+  title: 'Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in
+    Multi-Agent AI Environments'
+  authors:
+  - family-names: Gentyala
+    given-names: Sunil
+  publisher:
+    name: Cloud Security Alliance
+  year: 2026
+  month: 6
+  url: https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments
