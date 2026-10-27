@@ -20,7 +20,7 @@ jobs:
 
       - name: Install OPA
         run: |
-          curl -sL -o /usr/local/bin/opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
+          curl -sL -o /usr/local/bin/opa https://openpolicyagent.org/downloads/v1.21.4/opa_linux_amd64_static
           chmod +x /usr/local/bin/opa
 
       - name: Lint Rego policies
@@ -41,7 +41,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version-file: go.mod
           cache: true
 
       - name: Download dependencies
@@ -62,7 +62,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version-file: go.mod
 
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest

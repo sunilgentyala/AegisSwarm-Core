@@ -7,58 +7,58 @@ package aegisswarm.guardrail
 # Tier 3 = Senior (external API calls, delegated orchestration)
 # Tier 4 = Principal (high-consequence ops with human approval gate)
 
-import future.keywords.in
+import rego.v1
 
-default decision = {"allow": false, "reason": "default deny — no matching rule"}
+default decision := {"allow": false, "reason": "default deny — no matching rule"}
 
 # Tier 1 agents may only call low-risk tools
-decision = {"allow": true, "reason": "tier-1 low-risk tool permitted"} {
-    input.tier == 1
-    input.tool_id in tier1_tools
+decision := {"allow": true, "reason": "tier-1 low-risk tool permitted"} if {
+	input.tier == 1
+	input.tool_id in tier1_tools
 }
 
 # Tier 2 agents may call low- and medium-risk tools
-decision = {"allow": true, "reason": "tier-2 medium-risk tool permitted"} {
-    input.tier == 2
-    input.tool_id in tier2_tools
+decision := {"allow": true, "reason": "tier-2 medium-risk tool permitted"} if {
+	input.tier == 2
+	input.tool_id in tier2_tools
 }
 
 # Tier 3 agents may call any non-blocked tool
-decision = {"allow": true, "reason": "tier-3 tool permitted"} {
-    input.tier == 3
-    not blocked_tools[input.tool_id]
+decision := {"allow": true, "reason": "tier-3 tool permitted"} if {
+	input.tier == 3
+	not blocked_tools[input.tool_id]
 }
 
 # Tier 4 agents (Principal) may call any tool but high-consequence ops
 # must pass through the human-approval gate in the Conductor
-decision = {"allow": true, "reason": "tier-4 principal action — conductor enforces human gate"} {
-    input.tier == 4
-    not globally_blocked_tools[input.tool_id]
+decision := {"allow": true, "reason": "tier-4 principal action — conductor enforces human gate"} if {
+	input.tier == 4
+	not globally_blocked_tools[input.tool_id]
 }
 
 # Globally blocked tools — never permitted regardless of tier
-decision = {"allow": false, "reason": "tool is globally blocked by policy"} {
-    globally_blocked_tools[input.tool_id]
+decision := {"allow": false, "reason": "tool is globally blocked by policy"} if {
+	globally_blocked_tools[input.tool_id]
 }
 
 tier1_tools := {
-    "read_file",
-    "list_directory",
-    "query_audit_log",
+	"read_file",
+	"list_directory",
+	"query_audit_log",
 }
 
 tier2_tools := tier1_tools | {
-    "write_file",
-    "generate_report",
-    "run_tests",
+	"write_file",
+	"generate_report",
+	"run_tests",
 }
 
 blocked_tools := globally_blocked_tools | {
-    "external_transfer",
-    "delete_resource",
+	"external_transfer",
+	"delete_resource",
 }
 
 globally_blocked_tools := {
-    "execute_shell",
-    "external_transfer",
+	"execute_shell",
+	"external_transfer",
 }
