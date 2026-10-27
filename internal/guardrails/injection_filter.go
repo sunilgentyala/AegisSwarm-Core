@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/v1/rego"
 	"go.uber.org/zap"
 )
 
